@@ -117,34 +117,124 @@ export const GAME_DB: Record<string, string> = {
   "ghost of tsushima":  "Ghost of Tsushima",
 
   // ── Indies & Others ───────────────────────────────────────────────────────
-  hades:                "Hades",
-  hades2:               "Hades II",
-  baldursgate3:         "Baldur's Gate 3",
-  "bg3":                "Baldur's Gate 3",
-  stardewvalley:        "Stardew Valley",
-  minecraft:            "Minecraft",
-  minecraftlauncher:    "Minecraft",
-  terraria:             "Terraria",
-  celeste:              "Celeste",
-  cuphead:              "Cuphead",
-  deathstranding:       "Death Stranding",
-  "monsterhunterworld": "Monster Hunter: World",
-  mhrise:               "Monster Hunter Rise",
-  palworld:             "Palworld",
+  hades:                     "Hades",
+  hades2:                    "Hades II",
+  baldursgate3:              "Baldur's Gate 3",
+  bg3:                       "Baldur's Gate 3",
+  stardewvalley:             "Stardew Valley",
+  minecraft:                 "Minecraft",
+  minecraftlauncher:         "Minecraft",
+  terraria:                  "Terraria",
+  celeste:                   "Celeste",
+  cuphead:                   "Cuphead",
+  deathstranding:            "Death Stranding",
+  monsterhunterworld:        "Monster Hunter: World",
+  mhrise:                    "Monster Hunter Rise",
+  palworld:                  "Palworld",
   "palworld-win64-shipping": "Palworld",
-  blackmythwukong:      "Black Myth: Wukong",
-  "b1-win64-shipping":  "Black Myth: Wukong",
-  lies:                 "Lies of P",
-  liesofp:              "Lies of P",
-  remnant2:             "Remnant II",
-  "remnant-win64":      "Remnant II",
-  deadspace:            "Dead Space",
-  resident:             "Resident Evil",
-  re4:                  "Resident Evil 4",
-  re7:                  "Resident Evil 7",
-  re8:                  "Resident Evil Village",
-  dmc5:                 "Devil May Cry 5",
+  blackmythwukong:           "Black Myth: Wukong",
+  "b1-win64-shipping":       "Black Myth: Wukong",
+  lies:                      "Lies of P",
+  liesofp:                   "Lies of P",
+  remnant2:                  "Remnant II",
+  "remnant-win64":           "Remnant II",
+  deadspace:                 "Dead Space",
+  re4:                       "Resident Evil 4",
+  re7:                       "Resident Evil 7",
+  re8:                       "Resident Evil Village",
+  dmc5:                      "Devil May Cry 5",
+
+  // ── Riot Games ────────────────────────────────────────────────────────────
+
+  // Valorant's real process is "VALORANT-Win64-Shipping.exe"
+  "valorant-win64-shipping": "VALORANT",
+  valorant:                  "VALORANT",
+
+  // League of Legends
+  "league of legends":       "League of Legends",
+  leagueoflegends:           "League of Legends",
+  "league of legends (tm) client": "League of Legends",
+
+  // TFT uses the same client as LoL
+  // Legends of Runeterra
+  "lor":                     "Legends of Runeterra",
+  legendsofruneterra:        "Legends of Runeterra",
+
+  // Wild Rift (PC via emulator)
+  wildrift:                  "Wild Rift",
+
+  // ── EA / Respawn ──────────────────────────────────────────────────────────
+  // Apex Legends real process
+  "r5apex":                  "Apex Legends",
+  "r5apex-dx12":             "Apex Legends",
+  apex:                      "Apex Legends",
+
+  // ── Psyonix / Epic ────────────────────────────────────────────────────────
+  // Rocket League
+  "rocketleague":            "Rocket League",
+  "rocket league":           "Rocket League",
+
+  // ── Epic Unreal titles (Win64-Shipping pattern) ────────────────────────────
+  "talos2-win64-shipping":   "The Talos Principle II",
+  "kena-win64-shipping":     "Kena: Bridge of Spirits",
+  "satisfactory-win64-shipping": "Satisfactory",
+  satisfactory:              "Satisfactory",
+
+  // ── Other popular games with unusual names ─────────────────────────────────
+  // Destiny 2
+  destiny2:                  "Destiny 2",
+  "destiny 2":               "Destiny 2",
+
+  // Escape from Tarkov
+  escapefromtarkov:          "Escape from Tarkov",
+  eft:                       "Escape from Tarkov",
+
+  // Hunt: Showdown
+  huntshowdown:              "Hunt: Showdown",
+  "hunt: showdown":          "Hunt: Showdown",
+
+  // Rainbow Six Siege
+  "rainbowsix":              "Rainbow Six Siege",
+  "rainbowsix_vulkan":       "Rainbow Six Siege",
+
+  // PUBG
+  "tslgame":                 "PUBG: Battlegrounds",
+  pubg:                      "PUBG: Battlegrounds",
+
+  // The Finals
+  "discovery-win64-shipping":"The Finals",
+  "thefinals":               "The Finals",
+
+  // Helldivers 2
+  "helldivers2":             "Helldivers 2",
+  helldivers:                "Helldivers 2",
+
+  // Warhammer 40K: Space Marine 2
+  "spacemarine2":            "Space Marine 2",
+  "warhammer40000spacemarine2": "Space Marine 2",
+
+  // Path of Exile
+  pathofexile:               "Path of Exile",
+  pathofexile2:              "Path of Exile 2",
+
+  // Genshin Impact
+  genshinimpact:             "Genshin Impact",
+  "genshin impact":          "Genshin Impact",
+  "yuanshen":                "Genshin Impact",
+
+  // Honkai: Star Rail
+  "starrail":                "Honkai: Star Rail",
+  honkaistarrail:            "Honkai: Star Rail",
+
+  // Zenless Zone Zero
+  "zenlesszonezereo":        "Zenless Zone Zero",
+  "zzz":                     "Zenless Zone Zero",
+
+  // Wuthering Waves
+  "client-win64-shipping":   "Wuthering Waves",
+  wutheringwaves:            "Wuthering Waves",
 };
+
 
 // Common accent colors per game genre (used when auto-adding)
 export const GAME_ACCENT_COLORS: Record<string, string> = {

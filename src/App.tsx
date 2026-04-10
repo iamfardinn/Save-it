@@ -111,8 +111,13 @@ function App() {
     return () => { if (unlisten) unlisten(); };
   }, [games]);
 
-  // ── Poll every 5 s: detect tracked games + auto-detect new ones ───────────
+  // ── Session start timestamps — keyed by game ID ────────────────────────────
+  const sessionStart = useRef<Record<string, number>>({});
+
+  // ── Poll every 5 s: detect tracked games + auto-detect new ones ────────────
   useEffect(() => {
+    const POLL_MS = 5000;
+
     const poll = async () => {
       try {
         // ① Scan ALL running processes from Rust
@@ -129,11 +134,47 @@ function App() {
         if (runningIds.length > 0) {
           const running = games.find(g => g.id === runningIds[0]) ?? null;
           setNowPlaying(running);
-          setDetectedGame(null); // tracked game → no toast
-          setGames(prev => prev.map(g => ({ ...g, isActive: runningIds.includes(g.id) })));
+          setDetectedGame(null);
+
+          const now = Date.now();
+
+          setGames(prev => prev.map(g => {
+            const isRunning = runningIds.includes(g.id);
+
+            if (isRunning) {
+              // Record when this game started this session
+              if (!sessionStart.current[g.id]) {
+                sessionStart.current[g.id] = now;
+              }
+              return { ...g, isActive: true };
+            }
+
+            // Game was running before but just stopped — flush playtime
+            if (!isRunning && sessionStart.current[g.id]) {
+              const elapsedHours = (now - sessionStart.current[g.id]) / 1000 / 3600;
+              delete sessionStart.current[g.id];
+              const newPlaytime = Math.round((g.playtime + elapsedHours) * 10) / 10;
+              const today = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+              return { ...g, isActive: false, playtime: newPlaytime, lastPlayed: today };
+            }
+
+            return { ...g, isActive: false };
+          }));
         } else {
           setNowPlaying(null);
-          setGames(prev => prev.map(g => ({ ...g, isActive: false })));
+
+          // Flush any remaining active sessions that just ended
+          const now = Date.now();
+          setGames(prev => prev.map(g => {
+            if (sessionStart.current[g.id]) {
+              const elapsedHours = (now - sessionStart.current[g.id]) / 1000 / 3600;
+              delete sessionStart.current[g.id];
+              const newPlaytime = Math.round((g.playtime + elapsedHours) * 10) / 10;
+              const today = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+              return { ...g, isActive: false, playtime: newPlaytime, lastPlayed: today };
+            }
+            return { ...g, isActive: false };
+          }));
 
           // ③ Auto-detect: scan allRunning against game database
           let found: { name: string; exe: string } | null = null;
@@ -141,7 +182,6 @@ function App() {
             if (ignoredExes.current.has(exe)) continue;
             const name = lookupGame(exe);
             if (!name) continue;
-            // Don't show toast for games already in library (even without exe configured)
             const alreadyTracked = games.some(
               g => g.name.toLowerCase() === name.toLowerCase()
                 || (g.exeName ?? "").toLowerCase().replace(/\.exe$/i, "") === exe
