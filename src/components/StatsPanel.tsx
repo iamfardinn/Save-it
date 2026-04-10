@@ -2,6 +2,15 @@ import { motion } from "framer-motion";
 import { Clock, Trophy, BarChart2, Gamepad2 } from "lucide-react";
 import type { Game } from "../types";
 
+function formatPlaytime(hours: number): string {
+  if (hours < 1 / 60) return "0m";
+  const h = Math.floor(hours);
+  const m = Math.round((hours - h) * 60);
+  if (h === 0) return `${m}m`;
+  if (m === 0) return `${h}h`;
+  return `${h}h ${m}m`;
+}
+
 interface Props { games: Game[] }
 
 export default function StatsPanel({ games }: Props) {
@@ -14,7 +23,7 @@ export default function StatsPanel({ games }: Props) {
     : 0;
 
   const stats = [
-    { icon: Clock,    label: "Total Playtime",  value: `${Math.round(totalPlaytime)}h`, color: "#00f5ff" },
+    { icon: Clock,    label: "Total Playtime",  value: formatPlaytime(totalPlaytime), color: "#00f5ff" },
     { icon: Trophy,   label: "Milestones",       value: totalMilestones,                color: "#f5c518" },
     { icon: Gamepad2, label: "Sessions Logged",  value: totalSessions,                  color: "#9b5de5" },
     { icon: BarChart2,label: "Avg. Completion",  value: `${avgCompletion}%`,            color: "#22c55e" },

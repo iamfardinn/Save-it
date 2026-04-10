@@ -112,12 +112,12 @@ function App() {
   }, [games]);
 
   // ── Session start timestamps — keyed by game ID ────────────────────────────
-  const sessionStart = useRef<Record<string, number>>({});
+  // Stores the BASE playtime at session start so we don't double-count across ticks
+  const sessionStart    = useRef<Record<string, number>>({}); // timestamp when session began
+  const sessionBaseline = useRef<Record<string, number>>({}); // game.playtime at session start
 
   // ── Poll every 5 s: detect tracked games + auto-detect new ones ────────────
   useEffect(() => {
-    const POLL_MS = 5000;
-
     const poll = async () => {
       try {
         // ① Scan ALL running processes from Rust
@@ -137,25 +137,30 @@ function App() {
           setDetectedGame(null);
 
           const now = Date.now();
+          const today = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 
           setGames(prev => prev.map(g => {
             const isRunning = runningIds.includes(g.id);
 
             if (isRunning) {
-              // Record when this game started this session
+              // First tick of this session — record start and baseline playtime
               if (!sessionStart.current[g.id]) {
-                sessionStart.current[g.id] = now;
+                sessionStart.current[g.id]    = now;
+                sessionBaseline.current[g.id] = g.playtime;
               }
-              return { ...g, isActive: true };
+              // ── Live update: recalculate total elapsed from baseline every tick
+              const elapsedHours   = (now - sessionStart.current[g.id]) / 1000 / 3600;
+              const livePlaytime   = Math.round((sessionBaseline.current[g.id] + elapsedHours) * 10) / 10;
+              return { ...g, isActive: true, playtime: livePlaytime, lastPlayed: today };
             }
 
-            // Game was running before but just stopped — flush playtime
-            if (!isRunning && sessionStart.current[g.id]) {
+            // Game was running before but just stopped — clean up refs
+            if (sessionStart.current[g.id]) {
               const elapsedHours = (now - sessionStart.current[g.id]) / 1000 / 3600;
+              const finalPlaytime = Math.round((sessionBaseline.current[g.id] + elapsedHours) * 10) / 10;
               delete sessionStart.current[g.id];
-              const newPlaytime = Math.round((g.playtime + elapsedHours) * 10) / 10;
-              const today = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-              return { ...g, isActive: false, playtime: newPlaytime, lastPlayed: today };
+              delete sessionBaseline.current[g.id];
+              return { ...g, isActive: false, playtime: finalPlaytime, lastPlayed: today };
             }
 
             return { ...g, isActive: false };
@@ -163,15 +168,16 @@ function App() {
         } else {
           setNowPlaying(null);
 
-          // Flush any remaining active sessions that just ended
+          // Flush any sessions that just ended
           const now = Date.now();
+          const today = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
           setGames(prev => prev.map(g => {
             if (sessionStart.current[g.id]) {
-              const elapsedHours = (now - sessionStart.current[g.id]) / 1000 / 3600;
+              const elapsedHours  = (now - sessionStart.current[g.id]) / 1000 / 3600;
+              const finalPlaytime = Math.round((sessionBaseline.current[g.id] + elapsedHours) * 10) / 10;
               delete sessionStart.current[g.id];
-              const newPlaytime = Math.round((g.playtime + elapsedHours) * 10) / 10;
-              const today = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-              return { ...g, isActive: false, playtime: newPlaytime, lastPlayed: today };
+              delete sessionBaseline.current[g.id];
+              return { ...g, isActive: false, playtime: finalPlaytime, lastPlayed: today };
             }
             return { ...g, isActive: false };
           }));
@@ -215,6 +221,11 @@ function App() {
   const handleUpdateGame = useCallback((updated: Game) => {
     setGames(prev => prev.map(g => g.id === updated.id ? updated : g));
   }, []);
+
+  const handleDeleteGame = useCallback((id: string) => {
+    setGames(prev => prev.filter(g => g.id !== id));
+    if (selectedGame?.id === id) setSelectedGame(null);
+  }, [selectedGame]);
 
   const handleDeleteSavePoint = (id: string) => {
     setSavePoints(prev => prev.filter(sp => sp.id !== id));
@@ -370,7 +381,7 @@ function App() {
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px,1fr))", gap: 18 }}>
                   <AnimatePresence>
                     {filteredGames.map((game, i) => (
-                      <GameCard key={game.id} game={game} index={i} onClick={() => setSelectedGame(game)} />
+                      <GameCard key={game.id} game={game} index={i} onClick={() => setSelectedGame(game)} onDelete={handleDeleteGame} />
                     ))}
                   </AnimatePresence>
                 </div>
