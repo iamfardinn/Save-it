@@ -1,0 +1,85 @@
+:root {
+  --bg-dark: #0a0a0f;
+  --bg-card: rgba(20, 20, 25, 0.7);
+  --border-neon-cyan: #00f5ff;
+  --border-neon-purple: #9b5de5;
+  --text-main: #f0f0f5;
+  --text-muted: #8a8a9e;
+  
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  color: var(--text-main);
+  background-color: var(--bg-dark);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow: hidden;
+  background-color: var(--bg-dark); /* fallback */
+}
+
+body.bg-library {
+  background-image: linear-gradient(rgba(10, 10, 15, 0.75), rgba(10, 10, 15, 0.75)), url('/bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  transition: background-image 0.5s ease;
+}
+
+body.bg-vault {
+  background-image: linear-gradient(rgba(10, 10, 15, 0.75), rgba(10, 10, 15, 0.75)), url('/vault-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  transition: background-image 0.5s ease;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom scrollbar matching gaming aesthetic */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(155, 93, 229, 0.5);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-neon-cyan);
+}
+
+/* Base utility classes we will use */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, var(--border-neon-cyan) 0%, var(--border-neon-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

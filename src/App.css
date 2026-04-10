@@ -1,0 +1,58 @@
+/* Specific app styles here */
+.titlebar {
+  height: 30px;
+  background: rgba(10, 10, 15, 0.9);
+  user-select: none;
+  display: flex;
+  justify-content: flex-end;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.titlebar-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 46px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.titlebar-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.titlebar-button#titlebar-close:hover {
+  background: #e81123;
+  color: white;
+}
+
+.layout-container {
+  margin-top: 30px;
+  height: calc(100vh - 30px);
+  display: flex;
+}
+
+.sidebar {
+  width: 250px;
+  background: rgba(20, 20, 25, 0.5);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+}
